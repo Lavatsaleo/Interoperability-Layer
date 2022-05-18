@@ -25,10 +25,10 @@
   },
   "development": {
     "username": "root",
-    "password": "R6r?k7",
+    "password": "test",
     "database": "interopdb",
     "host": "localhost",
-    "port": 3309,
+    "port": 3306,
     "dialect": "mysql",
     "logging": false,
     "operatorsAliases": false

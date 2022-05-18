@@ -57,7 +57,7 @@ const updateLog = async (queue, level, log) => {
 const processAllQueued = async () => {
   const limit = 50
   let queuedMessages = await models.Queue.findAll({
-    where: { status: 'QUEUED', statusCode: 1 },
+    where: { status: 'QUEUED', statusCode: 1, noOfAttempts: { [Op.lte]: IL_LIMIT }},
     limit,
     order: [['priority', 'ASC']]
   })
@@ -69,7 +69,7 @@ const processAllQueued = async () => {
   if (queuedMessages.length === 0) {
     const withoutErrors = 0
     queuedMessages = await models.Queue.findAll({
-      where: { status: 'QUEUED', statusCode: [2, 3] },
+      where: { status: 'QUEUED', statusCode: [2, 3], noOfAttempts: { [Op.lte]: IL_LIMIT } },
       limit,
       order: [['statusCode', 'ASC'], ['noOfAttempts', 'ASC'], ['updatedAt', 'ASC']]
     })
@@ -81,7 +81,7 @@ const processAllQueued = async () => {
     }
   }
 
-  let queuedMessagesFirstHalf = queuedMessages.splice(
+  let queuedMessagesFirstHalf = queuedMessages.splice( 
     0,
     Math.ceil(queuedMessages.length / 2)
   )
